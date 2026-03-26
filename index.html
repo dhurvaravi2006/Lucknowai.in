@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LucknowAI | Global Strategic Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { background-color: #020617; color: #cbd5e1; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gradient-text { background: linear-gradient(90deg, #60a5fa, #a855f7, #60a5fa); background-size: 200% auto; -webkit-background-clip: text; color: transparent; animation: shine 3s linear infinite; }
+        @keyframes shine { to { background-position: 200% center; } }
+        #canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
+        .modal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.98); align-items: center; justify-content: center; }
+        .modal.active { display: flex; animation: modalIn 0.4s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .card-hover:hover { transform: translateY(-10px); border-color: rgba(96, 165, 250, 0.4); }
+        input[type=range] { accent-color: #3b82f6; cursor: pointer; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .animate-marquee { display: inline-block; animation: marquee 35s linear infinite; }
+        
+        /* Metro Live Tracker Styles */
+        .metro-line-vertical { position: relative; width: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .metro-line-progress { position: absolute; top: 0; width: 100%; background: #ef4444; border-radius: 10px; transition: height 0.8s ease; }
+        .station-dot { width: 12px; height: 12px; border-radius: 50%; background: #1e293b; border: 2px solid #334155; z-index: 10; transition: all 0.3s; }
+        .station-dot.active { background: #ef4444; border-color: #fca5a5; box-shadow: 0 0 15px #ef4444; transform: scale(1.3); }
+        .status-pulse { animation: status-blink 0.8s infinite alternate; }
+        @keyframes status-blink { from { opacity: 1; transform: scale(1); } to { opacity: 0.7; transform: scale(0.98); } }
+        
+        .buy-bar { background: #2563eb; color: white; padding: 8px 20px; border-radius: 99px; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border: none; cursor: pointer; }
+        .buy-bar:hover { background: #3b82f6; transform: translateY(-2px); }
+
+        .whatsapp-float { position: fixed; width: 60px; height: 60px; bottom: 80px; right: 40px; background-color: #25d366; color: white; border-radius: 50px; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 1000; text-decoration: none; animation: shake 3s infinite; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 10%, 30%, 50%, 70%, 90% { transform: rotate(-10deg); } 20%, 40%, 60%, 80% { transform: rotate(10deg); } }
+
+        iframe { filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%); border-radius: 2.5rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5rem !important; line-height: 1 !important; }
+            .text-8xl { font-size: 3.5rem !important; }
+            .text-6xl { font-size: 2.5rem !important; }
+            .pt-44 { padding-top: 8rem !important; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <a href="https://wa.me/9559675340" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+    <nav class="w-full py-6 px-12 flex justify-between items-center fixed top-0 z-40 glass">
+        <div class="text-2xl font-black text-white uppercase tracking-widest">Lucknow<span class="text-blue-500">AI</span></div>
+        <div class="flex items-center gap-6">
+            <div id="live-terminal" class="text-[10px] font-bold uppercase tracking-widest text-blue-400 hidden md:block">
+                <span class="h-2 w-2 bg-blue-500 rounded-full inline-block mr-2 animate-pulse"></span> Terminal v9.5 | <span id="live-clock">LOADING...</span>
+            </div>
+            <button onclick="openModal('buy')" class="buy-bar">Buy Domain</button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto pt-44 px-8 pb-40 text-center">
+        <h1 class="text-8xl font-black text-white mb-6 uppercase tracking-tighter leading-none">Global <span class="gradient-text">Gateway</span></h1>
+        <p class="text-slate-400 max-w-2xl mx-auto text-lg mb-20">Comprehensive 8-Pillar Strategic Portfolio for Enterprise Expansion.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div onclick="openModal('m1')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-blue-500/30">
+                <i class="fa-solid fa-city text-3xl text-blue-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">01. Know LKO</h3>
+            </div>
+            <div onclick="openModal('m2')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-green-500/30">
+                <i class="fa-solid fa-chart-line text-3xl text-green-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">02. Revenue</h3>
+            </div>
+            <div onclick="openModal('m3')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-purple-500/30">
+                <i class="fa-solid fa-map-location-dot text-3xl text-purple-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">03. Project Map</h3>
+            </div>
+            <div onclick="openModal('m4')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-yellow-500/30">
+                <i class="fa-solid fa-camera text-3xl text-yellow-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">04. Places</h3>
+            </div>
+            <div onclick="openModal('m5')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-cyan-500/30">
+                <i class="fa-solid fa-microchip text-3xl text-cyan-400 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">05. AI Land</h3>
+            </div>
+            <div onclick="openModal('m6')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-orange-500/30">
+                <i class="fa-solid fa-crown text-3xl text-orange-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">06. Richest</h3>
+            </div>
+            <div onclick="openModal('m7')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-pink-500/30">
+                <i class="fa-solid fa-users text-3xl text-pink-500 mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">07. Pop.</h3>
+            </div>
+            <div onclick="openModal('m8')" class="glass p-10 rounded-[3rem] card-hover cursor-pointer border-b-4 border-white bg-blue-600/10">
+                <i class="fa-solid fa-calculator text-3xl text-white mb-6"></i>
+                <h3 class="text-xl font-bold text-white uppercase">08. ROI Calc</h3>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-container" class="modal" onclick="closeModal()">
+        <div class="glass max-w-6xl w-full p-16 rounded-[4rem] relative overflow-y-auto max-h-[85vh]" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-10 right-10 text-white text-5xl font-light">&times;</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 w-full bg-blue-700 text-white py-3 z-50 overflow-hidden font-bold text-[10px] uppercase border-t border-blue-400/30">
+        <div class="whitespace-nowrap animate-marquee">
+            <span> AI CITY LAUNCH MARCH 2026 • IBM INAUGURATES GOVTECH CENTER • UP GSDP TARGET ₹30.25L CR • LKO-KNP EXPRESSWAY (NE-6) FINAL TESTING • DOMAIN OWNER RAVI SHARMA • PREMIUM ASSET </span>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let pArray = [];
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        class P { constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.vx = Math.random()*0.4-0.2; this.vy = Math.random()*0.4-0.2; } draw() { ctx.fillStyle = 'rgba(96,165,250,0.2)'; ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill(); } update() { this.x += this.vx; this.y += this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1; } }
+        for(let i=0; i<80; i++) pArray.push(new P());
+        function anim() { ctx.clearRect(0,0,canvas.width,canvas.height); pArray.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(anim); }
+        anim();
+
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            const d = now.getDate();
+            const mon = now.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+            const y = now.getFullYear();
+            const clockEl = document.getElementById('live-clock');
+            if(clockEl) clockEl.innerText = `${mon} ${d}, ${y} | ${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function updateROI() {
+            const headcount = document.getElementById('roiRange').value;
+            document.getElementById('roiHeadcount').innerText = headcount;
+            const savings = (headcount * 700000) / 10000000;
+            document.getElementById('roiResult').innerText = savings.toFixed(1);
+        }
+
+        const stations = ['CCS Airport', 'Transport Nagar', 'Charbagh', 'Hazratganj', 'Lucknow University', 'Munshi Pulia'];
+        const businessData = {
+            'eats': { items: ['Tunday Kababi', 'Royal Cafe', 'Idris Biryani', 'Sharma Tea', 'Dastarkhwan', 'Oudhyana', 'Cappuccino Blast', 'Open Air', 'Manish Eating Point', 'Ram Asrey'] },
+            'wash': { items: ['Lulu Car Spa', 'Express Wash', 'Detailing Devils', '3M Car Care', 'Car Shala', 'Auto Shine', 'GoMechanic', 'Wave Mall Wash', 'Royal Detailing', 'Doorstep Wash'] },
+            'fuel': { items: ['HP Hazratganj', 'Indian Oil Poly', 'Shell Shaheed', 'Tata EV Lulu', 'BPCL Aliganj', 'Jio-bp Station', 'HP Airport', 'MG EV Vibhuti', 'Nayara Energy', 'Reliance Faizabad'] },
+            'health': { items: ['Medanta Hospital', 'SGPGI', 'Apollo Medics', 'KGMU Trauma', 'Sahara Hospital', 'Chandan Hospital', 'Mayo Hospital', 'Era Medical', 'Lohia Hospital', 'Health City'] },
+            'metro': { items: stations }
+        };
+
+        const contentData = {
+            'm1': `
+            <div id="know-lko-container">
+                <h2 id="module-title" class="text-6xl font-black text-white mb-10 uppercase tracking-tighter text-center">Know Lucknow</h2>
+                <div id="lko-menu" class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+                    <div onclick="showLkoCategory('eats')" class="p-10 glass rounded-[2.5rem] border border-orange-500/20 hover:bg-white/5 cursor-pointer group transition">
+                        <i class="fa-solid fa-utensils text-4xl text-orange-400 mb-4 group-hover:scale-110 transition"></i>
+                        <div class="text-xs font-bold text-white uppercase">Top Eats</div>
+                    </div>
+                    <div onclick="showLkoCategory('wash')" class="p-10 glass rounded-[2.5rem] border border-cyan-500/20 hover:bg-white/5 cursor-pointer group transition">
+                        <i class="fa-solid fa-soap text-4xl text-cyan-400 mb-4 group-hover:scale-110 transition"></i>
+                        <div class="text-xs font-bold text-white uppercase">Car Wash</div>
+                    </div>
+                    <div onclick="showLkoCategory('fuel')" class="p-10 glass rounded-[2.5rem] border border-purple-500/20 hover:bg-white/5 cursor-pointer group transition">
+                        <i class="fa-solid fa-gas-pump text-4xl text-purple-400 mb-4 group-hover:scale-110 transition"></i>
+                        <div class="text-xs font-bold text-white uppercase">Fuel/EV</div>
+                    </div>
+                    <div onclick="showLkoCategory('health')" class="p-10 glass rounded-[2.5rem] border border-pink-500/20 hover:bg-white/5 cursor-pointer group transition">
+                        <i class="fa-solid fa-hospital text-4xl text-pink-400 mb-4 group-hover:scale-110 transition"></i>
+                        <div class="text-xs font-bold text-white uppercase">Health</div>
+                    </div>
+                    <div onclick="showLkoCategory('metro')" class="p-10 glass rounded-[2.5rem] border border-blue-400/20 hover:bg-white/5 cursor-pointer group transition">
+                        <i class="fa-solid fa-train-subway text-4xl text-blue-400 mb-4 group-hover:scale-110 transition"></i>
+                        <div class="text-xs font-bold text-white uppercase">Metro</div>
+                    </div>
+                </div>
+                <div id="lko-detail" class="hidden mt-8">
+                    <button onclick="backToLkoMenu()" class="text-blue-400 text-[10px] font-bold uppercase mb-8 flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Categories</button>
+                    <div id="lko-detail-content" class="grid md:grid-cols-2 gap-4"></div>
+                </div>
+                <div id="lko-profile" class="hidden mt-8">
+                    <button onclick="backToLkoDetail()" class="text-blue-400 text-[10px] font-bold uppercase mb-8 flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to List</button>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div id="metro-sidebar" class="hidden glass rounded-[2.5rem] p-8 border border-white/5 flex gap-6">
+                            <div class="metro-line-vertical flex flex-col justify-between items-center py-2">
+                                <div id="line-progress" class="metro-line-progress"></div>
+                                <div class="station-dot" data-station="CCS Airport"></div>
+                                <div class="station-dot" data-station="Transport Nagar"></div>
+                                <div class="station-dot" data-station="Charbagh"></div>
+                                <div class="station-dot" data-station="Hazratganj"></div>
+                                <div class="station-dot" data-station="Lucknow University"></div>
+                                <div class="station-dot" data-station="Munshi Pulia"></div>
+                            </div>
+                            <div class="flex flex-col justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 py-1">
+                                <span>CCS Airport</span><span>Transport Nagar</span><span>Charbagh</span><span>Hazratganj</span><span>University</span><span>Munshi Pulia</span>
+                            </div>
+                        </div>
+                        <div id="profile-main-content" class="md:col-span-3 text-center md:text-left">
+                            <div class="flex flex-col md:flex-row justify-between items-center md:items-start mb-6 gap-4">
+                                <div>
+                                    <h3 id="profile-name" class="text-5xl font-black text-white uppercase mb-2 tracking-tighter"></h3>
+                                    <p id="location-label" class="text-slate-500 text-[10px] uppercase tracking-[0.3em]">Verified Lucknow Location</p>
+                                </div>
+                                <div id="live-arrival-badge" class="hidden glass border border-blue-500/30 px-6 py-4 rounded-3xl min-w-[140px] text-center">
+                                    <p class="text-[8px] text-blue-400 font-bold uppercase tracking-widest mb-1">Next Train</p>
+                                    <p id="arrival-timer" class="text-2xl font-black text-white tracking-tighter">--:--</p>
+                                </div>
+                            </div>
+                            <div class="w-full h-80 bg-slate-900 rounded-[3rem] overflow-hidden mb-8 relative border border-white/5">
+                                <iframe id="map-frame" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                            <div class="flex justify-center md:justify-start">
+                                <button onclick="getDirections()" class="bg-white text-black px-10 py-5 rounded-full font-bold uppercase text-[10px] tracking-widest hover:bg-green-400 transition flex items-center gap-3">
+                                    <i class="fa-solid fa-location-arrow"></i> Start Navigation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+            'm2': `<h2 class="text-6xl font-black text-white mb-6 uppercase tracking-tighter">02. Revenue</h2><div class="flex flex-col items-center"><div class="text-8xl font-black text-green-500 mb-2">₹<span class="counter" data-target="10">0</span>,732 Cr</div><p class="text-slate-400 uppercase tracking-widest text-sm mb-10">Tech Infrastructure Capex (2025-26)</p><div class="w-full grid grid-cols-3 gap-4"><div class="p-6 glass rounded-2xl border border-green-500/20 text-center"><i class="fa-solid fa-microchip text-green-500 mb-2"></i><div class="text-xl font-bold text-white">10K</div><div class="text-[8px] text-slate-500 uppercase">GPUs Deployed</div></div><div class="p-6 glass rounded-2xl border border-green-500/20 text-center"><i class="fa-solid fa-building-columns text-green-500 mb-2"></i><div class="text-xl font-bold text-white">62</div><div class="text-[8px] text-slate-500 uppercase">AI Centers</div></div><div class="p-6 glass rounded-2xl border border-green-500/20 text-center"><i class="fa-solid fa-briefcase text-green-500 mb-2"></i><div class="text-xl font-bold text-white">75K+</div><div class="text-[8px] text-slate-500 uppercase">Tech Jobs</div></div></div></div>`,
+            'm3': `<h2 class="text-6xl font-black text-white mb-6 uppercase tracking-tighter">03. Project Map</h2><div class="p-10 glass rounded-[3rem] border border-purple-500/30 text-left"><div class="flex justify-between items-start mb-8"><h4 class="text-2xl font-bold text-white uppercase">Lucknow-Kanpur NE-6</h4><div class="px-6 py-2 bg-purple-600 text-white text-[10px] font-black rounded-full">APRIL 2026 LAUNCH</div></div><div class="grid grid-cols-2 md:grid-cols-4 gap-4"><div class="p-4 bg-white/5 rounded-2xl"><div class="text-purple-400 font-bold">63KM</div><div class="text-[8px] text-slate-500">Length</div></div><div class="p-4 bg-white/5 rounded-2xl"><div class="text-purple-400 font-bold">95%+</div><div class="text-[8px] text-slate-500">Civil Done</div></div><div class="p-4 bg-white/5 rounded-2xl"><div class="text-purple-400 font-bold">45 Min</div><div class="text-[8px] text-slate-500">Travel Time</div></div><div class="p-4 bg-white/5 rounded-2xl"><div class="text-purple-400 font-bold">₹4.7K Cr</div><div class="text-[8px] text-slate-500">Investment</div></div></div></div>`,
+            'm4': `<h2 class="text-6xl font-black text-white mb-6 uppercase tracking-tighter">04. Places</h2><div class="grid grid-cols-2 gap-6"><div class="p-8 glass rounded-3xl border border-yellow-500/10 text-center"><i class="fa-solid fa-building-shield text-yellow-500 text-4xl mb-4"></i><h4 class="text-white font-bold uppercase">IBM GovTech Hub</h4><p class="text-xs text-slate-500">Sushant Golf City</p></div><div class="p-8 glass rounded-3xl border border-yellow-500/10 text-center"><i class="fa-solid fa-leaf text-green-500 text-4xl mb-4"></i><h4 class="text-white font-bold uppercase">Green AI SEZ</h4><p class="text-xs text-slate-500">Nadarganj Zone</p></div></div>`,
+            'm5': `<h2 class="text-6xl font-black text-white mb-6 uppercase tracking-tighter">05. AI Land</h2><div class="grid md:grid-cols-2 gap-12 text-left"><div class="flex flex-col justify-center"><div class="text-8xl font-black text-cyan-400 mb-2"><span class="counter" data-target="258">0</span>+</div><p class="text-2xl text-white font-bold uppercase">Acres Integrated</p><p class="text-slate-500 mt-4 italic">Vrindavan Yojana & Nadarganj Mixed-Use Ecosystem.</p></div><div class="grid grid-cols-2 gap-4"><div class="p-6 glass rounded-2xl border-t-2 border-cyan-400 text-center"><i class="fa-solid fa-server text-cyan-400 text-2xl mb-2"></i><div class="text-[9px] font-bold">DATA</div></div><div class="p-6 glass rounded-2xl border-t-2 border-cyan-400 text-center"><i class="fa-solid fa-brain text-cyan-400 text-2xl mb-2"></i><div class="text-[9px] font-bold">R&D</div></div><div class="p-6 glass rounded-2xl border-t-2 border-cyan-400 text-center"><i class="fa-solid fa-bolt text-cyan-400 text-2xl mb-2"></i><div class="text-[9px] font-bold">ENERGY</div></div><div class="p-6 glass rounded-2xl border-t-2 border-cyan-400 text-center"><i class="fa-solid fa-robot text-cyan-400 text-2xl mb-2"></i><div class="text-[9px] font-bold">AI OPS</div></div></div></div>`,
+            'm6': `<h2 class="text-6xl font-black text-white mb-6 uppercase tracking-tighter">06. Richest</h2><div class="glass p-8 rounded-[2rem] border border-orange-500/20"><table class="w-full text-left text-xs text-slate-300"><thead><tr class="uppercase text-slate-500 border-b border-white/5"><th class="pb-4">Entity</th><th class="pb-4">Sector</th><th class="pb-4 text-right">Impact</th></tr></thead><tbody><tr class="border-b border-white/5"><td class="py-4 text-white font-bold">Sachin Agarwal</td><td class="py-4">Aero/Defense</td><td class="py-4 text-right text-green-400 font-bold">₹11,320 Cr</td></tr><tr class="border-b border-white/5"><td class="py-4 text-white font-bold">IBM India</td><td class="py-4">Software</td><td class="py-4 text-right text-green-400 font-bold">Strategic Hub</td></tr></tbody></table></div>`,
+            'm7': `<h2 class="text-6xl font-black text-white mb-6 uppercase tracking-tighter">07. Population</h2><div class="flex flex-col items-center"><div class="flex items-center gap-6 mb-8"><div class="text-8xl font-black text-pink-500"><span class="counter" data-target="437">0</span>M</div><svg width="60" height="40" viewBox="0 0 60 40" class="animate-bounce"><path d="M5 35L20 20L35 25L55 5" stroke="#ec4899" stroke-width="4" stroke-linecap="round"/></svg></div><div class="w-full max-w-md bg-white/5 p-6 rounded-2xl border border-pink-500/10 text-xs font-bold uppercase"><div class="flex justify-between mb-2"><span>Gen-Z Density</span><span>78%</span></div><div class="w-full bg-white/10 h-1.5 rounded-full"><div class="bg-pink-500 h-full w-[78%]"></div></div></div></div>`,
+            'm8': `<div class="grid md:grid-cols-2 gap-12"><div class="space-y-8 text-left"><h2 class="text-6xl font-black text-white uppercase tracking-tighter">08. ROI Calc</h2><input type="range" min="10" max="2500" value="500" class="w-full h-2 bg-blue-900 rounded-lg appearance-none cursor-pointer" id="roiRange" oninput="updateROI()"><div class="text-5xl font-black text-white mt-4" id="roiHeadcount">500</div><div class="text-xs text-blue-400 uppercase tracking-widest">Headcount relocation</div></div><div class="p-12 bg-blue-600/10 border border-blue-500/30 rounded-[4rem] text-center"><div class="text-[10px] text-slate-500 uppercase mb-2">Annual OPEX Savings</div><div class="text-8xl font-black text-white">₹<span id="roiResult">35</span>Cr</div><div class="mt-4 text-[10px] text-blue-400">VS TIER-1 METROS</div></div></div>`,
+            'buy': `<div id="buy-container" style="text-align:center"><div style="background: linear-gradient(90deg, #991b1b, #ef4444); color: white; padding: 10px; font-weight: bold; border-radius: 10px; margin-bottom: 20px;">🔥 BIDDING ACTIVE: High Offer ₹9,45,000</div><h1 style="font-size: 4rem; background: linear-gradient(to right, #00d2ff, #9cedff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">LucknowAI.in</h1><div style="background: #f59e0b; color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; width: fit-content; margin: 10px auto 30px;">PREMIUM DIGITAL ASSET</div><div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); max-width: 500px; margin: 0 auto;"><h2 style="color:white; margin-bottom:20px">Acquire Domain</h2><form id="domain-form" action="https://formspree.io/f/xzdawlgp" method="POST" style="display:flex; flex-direction:column; gap:10px;"><input type="text" name="name" placeholder="Name / Company" required style="padding:14px; border-radius:8px; background:#1e293b; border:1px solid #334155; color:white;"><input type="email" name="email" placeholder="Email" required style="padding:14px; border-radius:8px; background:#1e293b; border:1px solid #334155; color:white;"><input type="number" name="offer" placeholder="Offer (INR)" min="945001" required style="padding:14px; border-radius:8px; background:#1e293b; border:1px solid #334155; color:white;"><button type="submit" id="submit-btn" style="padding:16px; background:#00d2ff; color:white; font-weight:bold; border-radius:8px; cursor:pointer;">SECURE ASSET</button></form><div id="form-status" style="margin-top: 15px; font-weight: bold; display: none;"></div></div></div>`
+        };
+
+        let currentCategory = "";
+        let arrivalInterval;
+
+        function openModal(id) {
+            document.getElementById('modal-content').innerHTML = contentData[id];
+            document.getElementById('modal-container').classList.add('active');
+            setTimeout(() => {
+                document.querySelectorAll('.counter').forEach(c => {
+                    const target = +c.getAttribute('data-target');
+                    let count = 0;
+                    const update = () => { count += (target/40); if(count < target) { c.innerText = Math.ceil(count); setTimeout(update, 20); } else c.innerText = target; };
+                    update();
+                });
+            }, 300);
+        }
+
+        function closeModal() { 
+            document.getElementById('modal-container').classList.remove('active'); 
+            clearInterval(arrivalInterval);
+        }
+
+        /* KNOW LUCKNOW LOGIC INJECTED INTO DASHBOARD */
+        function showLkoCategory(type) {
+            currentCategory = type;
+            const container = document.getElementById('lko-detail-content');
+            container.innerHTML = '';
+            businessData[type].items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'p-6 glass rounded-2xl border border-white/5 flex justify-between items-center cursor-pointer hover:bg-white/5 transition';
+                div.innerHTML = `<span class="text-slate-300 text-sm font-bold uppercase tracking-wider">${item}</span><span class="text-[10px] text-blue-400 font-bold uppercase">Explore</span>`;
+                div.onclick = () => openProfile(item);
+                container.appendChild(div);
+            });
+            document.getElementById('lko-menu').classList.add('hidden');
+            document.getElementById('lko-detail').classList.remove('hidden');
+        }
+
+        function openProfile(name) {
+            document.getElementById('profile-name').innerText = name;
+            const sidebar = document.getElementById('metro-sidebar');
+            const badge = document.getElementById('live-arrival-badge');
+            const label = document.getElementById('location-label');
+            const mainContent = document.getElementById('profile-main-content');
+            
+            const searchUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(name + ' Lucknow')}`;
+            // NOTE: Using a cleaner generic fallback for iframe display if API key isn't provided:
+            document.getElementById('map-frame').src = `https://maps.google.com/maps?q=${encodeURIComponent(name + ' Lucknow')}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
+            if (currentCategory === 'metro') {
+                sidebar.classList.remove('hidden');
+                badge.classList.remove('hidden');
+                mainContent.classList.replace('md:col-span-3', 'md:col-span-2');
+                label.innerText = "Red Line North-South Corridor";
+                label.style.color = "#ef4444";
+                updateLiveLine(name);
+                clearInterval(arrivalInterval);
+                updateArrivalStatus();
+                arrivalInterval = setInterval(updateArrivalStatus, 1000);
+            } else {
+                sidebar.classList.add('hidden');
+                badge.classList.add('hidden');
+                mainContent.classList.replace('md:col-span-2', 'md:col-span-3');
+                label.innerText = "Verified Lucknow Location";
+                label.style.color = "#64748b";
+                clearInterval(arrivalInterval);
+            }
+            document.getElementById('lko-detail').classList.add('hidden');
+            document.getElementById('lko-profile').classList.remove('hidden');
+        }
+
+        function updateArrivalStatus() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const timerText = document.getElementById('arrival-timer');
+            if (hours < 6 || hours >= 22) {
+                timerText.innerText = "CLOSED";
+                timerText.style.color = "#ef4444";
+                return;
+            }
+            const cycleSeconds = 330; 
+            const totalSecondsToday = (minutes * 60) + seconds;
+            const remaining = cycleSeconds - (totalSecondsToday % cycleSeconds);
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            if (m === 0 && s <= 30) {
+                timerText.innerText = "ARRIVING";
+                timerText.style.color = "#4ade80";
+                timerText.classList.add('status-pulse');
+            } else {
+                timerText.innerText = `${m}m ${s.toString().padStart(2, '0')}s`;
+                timerText.style.color = "white";
+                timerText.classList.remove('status-pulse');
+            }
+        }
+
+        function updateLiveLine(name) {
+            const dots = document.querySelectorAll('.station-dot');
+            const progress = document.getElementById('line-progress');
+            let foundIndex = 0;
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('data-station') === name) { dot.classList.add('active'); foundIndex = index; }
+            });
+            progress.style.height = (foundIndex / (dots.length - 1)) * 100 + '%';
+        }
+
+        function getDirections() {
+            const name = document.getElementById('profile-name').innerText;
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' Lucknow')}`);
+        }
+
+        function backToLkoMenu() {
+            document.getElementById('lko-detail').classList.add('hidden');
+            document.getElementById('lko-menu').classList.remove('hidden');
+        }
+
+        function backToLkoDetail() {
+            document.getElementById('lko-profile').classList.add('hidden');
+            document.getElementById('lko-detail').classList.remove('hidden');
+            clearInterval(arrivalInterval);
+        }
+
+        // Form Handler
+        document.addEventListener('submit', async function(e) {
+            if (e.target && e.target.id === 'domain-form') {
+                e.preventDefault();
+                const form = e.target;
+                const status = document.getElementById("form-status");
+                const btn = document.getElementById("submit-btn");
+                btn.disabled = true; btn.innerText = "SENDING...";
+                try {
+                    const response = await fetch(form.action, { method: form.method, body: new FormData(form), headers: { 'Accept': 'application/json' } });
+                    if (response.ok) {
+                        status.style.color = "#4ade80"; status.innerText = "✅ OFFER SENT SUCCESSFULLY!"; status.style.display = "block";
+                        form.reset(); btn.innerText = "RECEIVED";
+                        setTimeout(() => { status.style.display = "none"; btn.disabled = false; btn.innerText = "SECURE ASSET"; }, 4000);
+                    } else { throw new Error(); }
+                } catch (err) { status.style.color = "#ef4444"; status.innerText = "❌ ERROR SENDING. PLEASE RETRY."; status.style.display = "block"; btn.disabled = false; btn.innerText = "RETRY"; }
+            }
+        });
+    </script>
+</body>
+</html>
